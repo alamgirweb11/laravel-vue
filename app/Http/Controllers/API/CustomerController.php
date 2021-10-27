@@ -16,13 +16,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-          $customers = Customer::orderBy('id', 'desc')->paginate(10);
+          return new CustomerCollection(Customer::orderBy('id', 'desc')->paginate(10));
 
-          if($customers){
-               return response()->json($customers);
-          }else{
-            return response()->json(['error' => ' Data Not Found']);
-          }
     }
 
     /**

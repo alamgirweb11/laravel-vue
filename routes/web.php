@@ -13,9 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// arrow function in laravel 
+Route::get('/', fn() => view('customers.manage'));
 
 Auth::routes();
 

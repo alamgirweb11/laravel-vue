@@ -24,6 +24,7 @@ class CustomerCollection extends ResourceCollection
                     'mobile' => $customer->mobile,
                     'image' => $customer->image,
                     'total' => $customer->total,
+                    'address' => $customer->address,
                     'status' => $customer->status,
                     'created_at' => $customer->created_at,
                     'updated_at' => $customer->updated_at,

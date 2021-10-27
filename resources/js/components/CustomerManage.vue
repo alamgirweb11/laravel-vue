@@ -21,7 +21,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(customer, index) in customers" key="customer.id">
+                                <tr v-for="(customer, index) in customers" :key="customer.id">
                                     <td>{{ index+1 }}</td>
                                     <td><img :src="customer.image" height="50" width="50"></td>
                                     <td>{{ customer.name }}</td>
@@ -42,6 +42,7 @@
                 </div>
             </div>
         </div>
+     <vue-progress-bar></vue-progress-bar>
     </div>
 </template>
 
@@ -59,13 +60,16 @@ export default {
     },
    methods:{
           getAllCustomers(){
+               this.$Progress.start();
                  axios.get('api/customers')
                  .then(response => {
                       this.customers = response.data.data;
-                      console.log(response)
+                    //   console.log(response)
+                     this.$Progress.finish()
                  })
                  .catch(e => {
                       console.log(e);
+                       this.$Progress.fail()
                  })
           }
    }

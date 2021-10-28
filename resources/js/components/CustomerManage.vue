@@ -3,7 +3,17 @@
         <div class="row justify-content-center">
             <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header">List of customers</div>
+                    <div class="card-header">
+                        <div class="row d-flex">
+                            <div class="col">
+                                List of customers
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-primary">Add Customer</button>
+                                <button class="btn btn-success" @click="reLoad()">Reload Page</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row mt-3">
                         <div class="col-md-2 offset-md-1">
                            <label for=""> <strong class="text-center">Search By:-</strong></label>
@@ -42,7 +52,7 @@
                                 <tr
                                     v-for="(customer, index) in customers.data"
                                     :key="customer.id"
-                                >
+                                 >
                                     <td>{{ index + 1 }}</td>
                                     <td>
                                         <img
@@ -75,6 +85,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <!-- <div v-if="!customers.length" :class="errorMsgStyle">{{ errorText }}</div> -->
                         <!-- <pagination :data="customers" @pagination-change-page="getAllCustomers"></pagination> -->
                         <pagination
                             :data="customers"
@@ -98,7 +109,13 @@ export default {
             queryInput: 'name',
             searchKey: '',
             customers: [],
-            imagePath: ""
+            imagePath: "",
+            errorMsgStyle:{
+                       'text-center': true,
+                       'text-danger': true,
+                       'font-weight-bolder': true,
+                  },
+           errorText: 'Sorry no data found!',
         };
     },
     watch:{
@@ -144,7 +161,13 @@ export default {
                     console.log(e);
                     this.$Progress.fail();
                 });
-        }
+        },
+        reLoad(){
+            this.$Progress.start()
+             this.getAllCustomers()
+             this.searchKey = ''
+             this.queryInput = 'name'
+        },
     }
 };
 </script>

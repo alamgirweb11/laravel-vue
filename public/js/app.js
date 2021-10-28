@@ -2158,13 +2158,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       queryInput: 'name',
       searchKey: '',
       customers: [],
-      imagePath: ""
+      imagePath: "",
+      errorMsgStyle: {
+        'text-center': true,
+        'text-danger': true,
+        'font-weight-bolder': true
+      },
+      errorText: 'Sorry no data found!'
     };
   },
   watch: {
@@ -2211,6 +2228,12 @@ __webpack_require__.r(__webpack_exports__);
 
         _this2.$Progress.fail();
       });
+    },
+    reLoad: function reLoad() {
+      this.$Progress.start();
+      this.getAllCustomers();
+      this.searchKey = '';
+      this.queryInput = 'name';
     }
   }
 });
@@ -38499,7 +38522,32 @@ var render = function() {
         _c("div", { staticClass: "col-md-12 col-lg-12" }, [
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }, [
-              _vm._v("List of customers")
+              _c("div", { staticClass: "row d-flex" }, [
+                _c("div", { staticClass: "col" }, [
+                  _vm._v(
+                    "\n                            List of customers\n                        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col" }, [
+                  _c("button", { staticClass: "btn btn-primary" }, [
+                    _vm._v("Add Customer")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      on: {
+                        click: function($event) {
+                          return _vm.reLoad()
+                        }
+                      }
+                    },
+                    [_vm._v("Reload Page")]
+                  )
+                ])
+              ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row mt-3" }, [

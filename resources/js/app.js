@@ -6,9 +6,13 @@
 
 require('./bootstrap');
 
-
+// window.Vue = require('vue');
 import Vue from 'vue'
 import VueProgressBar from 'vue-progressbar'
+import Form from 'vform'
+
+window.Form = Form;
+
 // import App from './App'
 
 const VueProgressBarOptions = {
@@ -25,7 +29,12 @@ const VueProgressBarOptions = {
   inverse: false
 }
 
+
+
 Vue.use(VueProgressBar, VueProgressBarOptions)
+
+
+
 
 /**
  * The following block of code may be used to automatically register your

@@ -85,4 +85,9 @@ class CustomerController extends Controller
     {
         //
     }
+
+    // search customer information
+    public function search_customer_information($inputField, $searchKey){
+             return new CustomerCollection(Customer::where($inputField, 'LIKE', '%'.$searchKey.'%')->latest()->paginate(5));
+    }
 }

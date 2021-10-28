@@ -4,7 +4,25 @@
             <div class="col-md-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">List of customers</div>
-
+                    <div class="row mt-3">
+                        <div class="col-md-2 offset-md-1">
+                           <label for=""> <strong class="text-center">Search By:-</strong></label>
+                        </div>
+                        <div class="col-md-3">
+                            
+                            <select class="form-control" v-model="queryInput">
+                                <option>Select Option</option>
+                                <option value="name">Name</option>
+                                <option value="email">Email</option>
+                                <option value="address">Address</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="total">Total</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" v-model="searchKey" placeholder="Searach" class="form-control">
+                        </div>
+                    </div>
                     <div class="card-body">
                         <table class="table table-striped table-hover">
                             <thead>
@@ -77,9 +95,21 @@
 export default {
     data() {
         return {
+            queryInput: 'name',
+            searchKey: '',
             customers: [],
             imagePath: ""
         };
+    },
+    watch:{
+        searchKey: function(value){
+                     if(value === ''){
+                          this.getAllCustomers();
+                     }else{
+                        this.getSarchCustomers();
+                     }
+        }
+         
     },
     mounted() {
         // console.log("Component mounted.");
@@ -90,6 +120,21 @@ export default {
             this.$Progress.start();
             axios
                 .get("api/customers?page=" + page)
+                .then(response => {
+                    this.customers = response.data;
+                    //   console.log(response)
+                    this.$Progress.finish();
+                })
+                .catch(e => {
+                    console.log(e);
+                    this.$Progress.fail();
+                });
+        },
+        getSarchCustomers(page = 1) {
+            this.$Progress.start();
+            // 
+            axios
+                .get('api/search/customers' + '/' + this.queryInput + '/' + this.searchKey + '?page=' + page )
                 .then(response => {
                     this.customers = response.data;
                     //   console.log(response)

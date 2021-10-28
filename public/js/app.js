@@ -2140,12 +2140,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      queryInput: 'name',
+      searchKey: '',
       customers: [],
       imagePath: ""
     };
+  },
+  watch: {
+    searchKey: function searchKey(value) {
+      if (value === '') {
+        this.getAllCustomers();
+      } else {
+        this.getSarchCustomers();
+      }
+    }
   },
   mounted: function mounted() {
     // console.log("Component mounted.");
@@ -2165,6 +2194,22 @@ __webpack_require__.r(__webpack_exports__);
         console.log(e);
 
         _this.$Progress.fail();
+      });
+    },
+    getSarchCustomers: function getSarchCustomers() {
+      var _this2 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.$Progress.start(); // 
+
+      axios.get('api/search/customers' + '/' + this.queryInput + '/' + this.searchKey + '?page=' + page).then(function (response) {
+        _this2.customers = response.data; //   console.log(response)
+
+        _this2.$Progress.finish();
+      })["catch"](function (e) {
+        console.log(e);
+
+        _this2.$Progress.fail();
       });
     }
   }
@@ -38457,6 +38502,89 @@ var render = function() {
               _vm._v("List of customers")
             ]),
             _vm._v(" "),
+            _c("div", { staticClass: "row mt-3" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.queryInput,
+                        expression: "queryInput"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.queryInput = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  [
+                    _c("option", [_vm._v("Select Option")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "name" } }, [
+                      _vm._v("Name")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "email" } }, [
+                      _vm._v("Email")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "address" } }, [
+                      _vm._v("Address")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "mobile" } }, [
+                      _vm._v("Mobile")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "total" } }, [
+                      _vm._v("Total")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.searchKey,
+                      expression: "searchKey"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", placeholder: "Searach" },
+                  domProps: { value: _vm.searchKey },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.searchKey = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
             _c(
               "div",
               { staticClass: "card-body" },
@@ -38465,7 +38593,7 @@ var render = function() {
                   "table",
                   { staticClass: "table table-striped table-hover" },
                   [
-                    _vm._m(0),
+                    _vm._m(1),
                     _vm._v(" "),
                     _c(
                       "tbody",
@@ -38497,7 +38625,7 @@ var render = function() {
                             ? _c("td", [_vm._v("Active")])
                             : _c("td", [_vm._v("Inactive")]),
                           _vm._v(" "),
-                          _vm._m(1, true)
+                          _vm._m(2, true)
                         ])
                       }),
                       0
@@ -38538,6 +38666,16 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-2 offset-md-1" }, [
+      _c("label", { attrs: { for: "" } }, [
+        _c("strong", { staticClass: "text-center" }, [_vm._v("Search By:-")])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

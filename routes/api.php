@@ -19,3 +19,4 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::apiResource('customers', App\Http\Controllers\API\CustomerController::class);
+Route::get('search/customers/{input}/{searKey}', [App\Http\Controllers\API\CustomerController::class, 'search_customer_information']);

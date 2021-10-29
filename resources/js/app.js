@@ -10,11 +10,13 @@ require('./bootstrap');
 import Vue from 'vue'
 import VueProgressBar from 'vue-progressbar'
 import Form from 'vform'
+import Snotify, { SnotifyPosition } from 'vue-snotify'
 
 window.Form = Form;
 
 // import App from './App'
 
+// vue progress-bar option 
 const VueProgressBarOptions = {
   color: '#32a63b',
   failedColor: '#de0d1b',
@@ -32,6 +34,20 @@ const VueProgressBarOptions = {
 
 
 Vue.use(VueProgressBar, VueProgressBarOptions)
+
+
+// snotify options
+const snotifyOptions = {
+  toast: {
+    position: SnotifyPosition.rightTop,
+    closeOnClick: true,
+    timeout: 2000,
+    showProgressBar: true,
+    pauseOnHover: false
+  }
+}
+
+Vue.use(Snotify, snotifyOptions)
 
 
 

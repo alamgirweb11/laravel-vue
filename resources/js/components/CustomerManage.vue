@@ -100,6 +100,7 @@
             </div>
         </div>
         <vue-progress-bar></vue-progress-bar>
+        <vue-snotify></vue-snotify>
 
  <!-- Button trigger modal -->
         <!-- Modal -->
@@ -244,10 +245,12 @@ export default {
              this.getAllCustomers()
              this.searchKey = ''
              this.queryInput = 'name'
+             this.$snotify.success('Data reload successfully.');
         },
         // add new customer modal method
         addCustomerModal(){
                this.editMode = false;
+               this.imagePreview = null;
                this.form.reset();
               $("#customerModal").modal("show");
         },

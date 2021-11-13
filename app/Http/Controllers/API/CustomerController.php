@@ -27,7 +27,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -38,7 +38,15 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+         if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $ext = $image->extension();
+            $file = time().'.'.$ext;
+            $image->storeAs('public/uploads/customers', $file);
+            $request->image = $file;
+        }
+        Customer::create($input);
     }
 
     /**

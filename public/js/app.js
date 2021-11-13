@@ -2341,6 +2341,32 @@ __webpack_require__.r(__webpack_exports__);
       this.form.reset();
       $('#customerModal').modal('show');
       this.form.fill(user);
+    },
+    // instert customer record
+    store: function store() {
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.form.busy = true;
+      this.form.post('api/customers/store').then(function (response) {
+        _this3.getAllCustomers();
+
+        $('#customerModal').modal('hide');
+
+        if (_this3.form.successfull) {
+          _this3.$Progress.finish();
+
+          _this3.$snotify.success('Customer info successfully submitted.');
+        } else {
+          _this3.$Progress.fail();
+
+          _this3.$snotify.error('Customer info successfully submitted.', 'error');
+        }
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   }
 });
@@ -39544,7 +39570,7 @@ var render = function() {
                         staticClass: "form-control-file",
                         attrs: {
                           type: "file",
-                          name: "image",
+                          name: "form.image",
                           id: "image",
                           placeholder: "image"
                         },

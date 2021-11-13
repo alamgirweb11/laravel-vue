@@ -142,7 +142,7 @@
                        </div>
                        <div class="form-group">
                          <label for="image">Image</label>
-                         <input type="file" @change="imagePreviewMethod" class="form-control-file"  name="image" id="image" placeholder="image">
+                         <input type="file" @change="imagePreviewMethod" class="form-control-file"  name="form.image" id="image" placeholder="image">
                          <img style="width:150px; margin-top: 8px;"  :src="imagePreview" alt="">
                        </div>
                         <div class="modal-footer">
@@ -276,6 +276,31 @@ export default {
                 $('#customerModal').modal('show');
                 this.form.fill(user);
             },
+
+        // instert customer record
+        store(){
+             this.$Progress.start();
+             this.form.busy = true;
+             this.form.post('api/customers/store')
+             .then(response => {
+                  this.getAllCustomers();
+                    $('#customerModal').modal('hide');
+                   if(this.form.successfull){
+                         this.$Progress.finish()
+                         this.$snotify.success('Customer info successfully submitted.')
+                   }else{
+                         this.$Progress.fail()
+                         this.$snotify.error(
+                             'Customer info successfully submitted.',
+                             'error'
+                             )
+                   }
+                   console.log(response);
+             })
+             .catch(error => {
+              console.log(error)
+             })
+        }
     }
 };
 </script>

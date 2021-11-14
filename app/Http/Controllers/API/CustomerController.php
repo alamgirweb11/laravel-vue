@@ -36,15 +36,21 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // $image = $request->file('image');
+    // $ext = $image->extension();
+    // $file = time().'.'.$ext;
+    // $image->storeAs('public/customer', $file);
+    // $customer->image = $file;
+
     public function store(Request $request)
     {
         $input = $request->all();
          if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $ext = $image->extension();
+            $ext = $image->getClientOriginalExtension();
             $file = time().'.'.$ext;
-            $image->storeAs('public/uploads/customers', $file);
-            $request->image = $file;
+            $image->move('uploads/customers', $file);
+            $input['image'] = $file;
         }
         Customer::create($input);
     }
@@ -91,7 +97,13 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $customer = Customer::findOrFail($id);
+        $imagePath = 'public/uploads/customers/'.$customer->image;
+        return $customer->image;
+        if(file_exists($imagePath)){
+            unlink($imagePath);
+        }
+        $customer->delete();
     }
 
     // search customer information

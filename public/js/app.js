@@ -2226,34 +2226,148 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       imagePreview: null,
-      customerPicture: '',
+      customerPicture: "",
       imageStyleClass: {
-        'image-preview': true
+        "image-preview": true
       },
       editMode: false,
-      queryInput: 'name',
-      searchKey: '',
+      queryInput: "name",
+      searchKey: "",
       customers: [],
       imagePath: "",
       errorMsgStyle: {
-        'text-center': true,
-        'text-danger': true,
-        'font-weight-bolder': true
+        "text-center": true,
+        "text-danger": true,
+        "font-weight-bolder": true
       },
-      errorText: 'Sorry no data found!',
+      errorText: "Sorry no data found!",
       //    form data set
       form: new Form({
         id: "",
         name: "",
         email: "",
-        phone: "",
+        mobile: "",
         address: "",
         total: "",
-        status: "",
+        status: 1,
         image: ""
       })
     };
@@ -2261,7 +2375,7 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     // condition wise data rendering
     searchKey: function searchKey(value) {
-      if (value === '') {
+      if (value === "") {
         this.getAllCustomers();
       } else {
         this.getSarchCustomers();
@@ -2294,9 +2408,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      this.$Progress.start(); // 
+      this.$Progress.start(); //
 
-      axios.get('api/search/customers' + '/' + this.queryInput + '/' + this.searchKey + '?page=' + page).then(function (response) {
+      axios.get("api/search/customers" + "/" + this.queryInput + "/" + this.searchKey + "?page=" + page).then(function (response) {
         _this2.customers = response.data; //   console.log(response)
 
         _this2.$Progress.finish();
@@ -2310,9 +2424,9 @@ __webpack_require__.r(__webpack_exports__);
     reLoad: function reLoad() {
       this.$Progress.start();
       this.getAllCustomers();
-      this.searchKey = '';
-      this.queryInput = 'name';
-      this.$snotify.success('Data reload successfully.');
+      this.searchKey = "";
+      this.queryInput = "name";
+      this.$snotify.success("Data reload successfully.");
     },
     // add new customer modal method
     addCustomerModal: function addCustomerModal() {
@@ -2339,33 +2453,93 @@ __webpack_require__.r(__webpack_exports__);
     editModal: function editModal(user) {
       this.editMode = true;
       this.form.reset();
-      $('#customerModal').modal('show');
+      $("#customerModal").modal("show");
       this.form.fill(user);
     },
-    // instert customer record
+    // insert customer record
     store: function store() {
       var _this3 = this;
 
       this.$Progress.start();
       this.form.busy = true;
-      this.form.post('api/customers/store').then(function (response) {
+      this.form.post("/api/customers").then(function (response) {
         _this3.getAllCustomers();
 
-        $('#customerModal').modal('hide');
+        $("#customerModal").modal("hide");
 
-        if (_this3.form.successfull) {
+        if (_this3.form.successful) {
           _this3.$Progress.finish();
 
-          _this3.$snotify.success('Customer info successfully submitted.');
+          _this3.$snotify.success("Customer info successfully submitted.");
         } else {
           _this3.$Progress.fail();
 
-          _this3.$snotify.error('Customer info successfully submitted.', 'error');
+          _this3.$snotify.error("Something went wrong, please try again.", "error");
         }
 
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
+      });
+    },
+    // delete customer record
+    deleteRecord: function deleteRecord(customer) {
+      var _this4 = this;
+
+      this.$snotify.clear();
+      this.$snotify.confirm("You cannot recover this data again.", "Are You Sure?", {
+        timeout: false,
+        showProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        buttons: [{
+          text: "Yes",
+          action: function action(toast) {
+            _this4.$snotify.remove(toast.id);
+
+            _this4.$Progress.start(); // this.form.busy = true;
+
+
+            _this4.form["delete"]("/api/customers/" + customer.id).then(function (response) {
+              _this4.getAllCustomers();
+
+              if (_this4.form.successful) {
+                _this4.$Progress.finish();
+
+                _this4.$snotify.success("Customer info successfully deleted.");
+              }
+
+              console.log(response);
+            })["catch"](function (error) {
+              _this4.$Progress.fail();
+
+              _this4.$snotify.error(response.error, "error");
+            });
+          },
+          bold: true
+        }, {
+          text: "No",
+          action: function action(toast) {
+            _this4.$snotify.success("Safe Data.");
+
+            _this4.$snotify.remove(toast.id);
+          }
+        }, {
+          text: "Later",
+          action: function action(toast) {
+            console.log("Clicked: Later");
+
+            _this4.$snotify.remove(toast.id);
+          }
+        }, {
+          text: "Close",
+          action: function action(toast) {
+            console.log("Clicked: No");
+
+            _this4.$snotify.remove(toast.id);
+          },
+          bold: true
+        }]
       });
     }
   }
@@ -17880,7 +18054,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.image-preview{\n      height: 150px;\n      width: 150px;\n      margin-top: 8px;\n      border: 1px solid #111;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.image-preview {\n    height: 150px;\n    width: 150px;\n    margin-top: 8px;\n    border: 1px solid #111;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -39120,7 +39294,7 @@ var render = function() {
               _c("div", { staticClass: "row d-flex" }, [
                 _c("div", { staticClass: "col" }, [
                   _vm._v(
-                    "\n                               List of customers\n                           "
+                    "\n                            List of customers\n                        "
                   )
                 ]),
                 _vm._v(" "),
@@ -39135,7 +39309,11 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v("Add Customer")]
+                    [
+                      _vm._v(
+                        "\n                                Add Customer\n                            "
+                      )
+                    ]
                   ),
                   _vm._v(" "),
                   _c(
@@ -39148,7 +39326,11 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v("Reload Page")]
+                    [
+                      _vm._v(
+                        "\n                                Reload Page\n                            "
+                      )
+                    ]
                   )
                 ])
               ])
@@ -39296,7 +39478,12 @@ var render = function() {
                               "a",
                               {
                                 staticClass: "btn btn-sm btn-danger",
-                                attrs: { href: "#", title: "Delete" }
+                                attrs: { href: "#", title: "Delete" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.deleteRecord(customer)
+                                  }
+                                }
                               },
                               [_vm._v("Delete")]
                             )
@@ -39367,7 +39554,11 @@ var render = function() {
                     staticClass: "modal-title",
                     attrs: { id: "customerModallLabel" }
                   },
-                  [_vm._v("Add New Customer")]
+                  [
+                    _vm._v(
+                      "\n                        Add New Customer\n                    "
+                    )
+                  ]
                 ),
                 _vm._v(" "),
                 _c(
@@ -39384,7 +39575,11 @@ var render = function() {
                     staticClass: "modal-title",
                     attrs: { id: "customerModallLabel" }
                   },
-                  [_vm._v("Edit Customer Info ")]
+                  [
+                    _vm._v(
+                      "\n                        Edit Customer Info\n                    "
+                    )
+                  ]
                 ),
                 _vm._v(" "),
                 _vm._m(2)
@@ -39394,7 +39589,7 @@ var render = function() {
                 _c(
                   "form",
                   {
-                    attrs: { method: "post" },
+                    attrs: { method: "POST", enctype: "multipart/form-data" },
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
@@ -39468,8 +39663,8 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "phone" } }, [
-                        _vm._v("Phone")
+                      _c("label", { attrs: { for: "mobile" } }, [
+                        _vm._v("Mobile")
                       ]),
                       _vm._v(" "),
                       _c("input", {
@@ -39477,24 +39672,24 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.form.phone,
-                            expression: "form.phone"
+                            value: _vm.form.mobile,
+                            expression: "form.mobile"
                           }
                         ],
                         staticClass: "form-control",
                         attrs: {
                           type: "number",
-                          name: "phone",
-                          id: "phone",
-                          placeholder: "Enter Your phone"
+                          name: "mobile",
+                          id: "mobile",
+                          placeholder: "Enter Your mobile"
                         },
-                        domProps: { value: _vm.form.phone },
+                        domProps: { value: _vm.form.mobile },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.$set(_vm.form, "phone", $event.target.value)
+                            _vm.$set(_vm.form, "mobile", $event.target.value)
                           }
                         }
                       })
@@ -39562,6 +39757,56 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "status" } }, [
+                        _vm._v("Status")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.status,
+                              expression: "form.status"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { name: "status" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.form,
+                                "status",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c("option", { attrs: { value: "1" } }, [
+                            _vm._v("Active")
+                          ]),
+                          _vm._v(" "),
+                          _c("option", { attrs: { value: "0" } }, [
+                            _vm._v("Inactive")
+                          ])
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
                       _c("label", { attrs: { for: "image" } }, [
                         _vm._v("Image")
                       ]),
@@ -39570,7 +39815,7 @@ var render = function() {
                         staticClass: "form-control-file",
                         attrs: {
                           type: "file",
-                          name: "form.image",
+                          name: "image",
                           id: "image",
                           placeholder: "image"
                         },
@@ -39590,7 +39835,11 @@ var render = function() {
                           staticClass: "btn btn-secondary",
                           attrs: { type: "button", "data-dismiss": "modal" }
                         },
-                        [_vm._v("Close")]
+                        [
+                          _vm._v(
+                            "\n                                Close\n                            "
+                          )
+                        ]
                       ),
                       _vm._v(" "),
                       _c(
@@ -39607,7 +39856,11 @@ var render = function() {
                           staticClass: "btn btn-success",
                           attrs: { type: "submit" }
                         },
-                        [_vm._v("Update")]
+                        [
+                          _vm._v(
+                            "\n                                Update\n                            "
+                          )
+                        ]
                       ),
                       _vm._v(" "),
                       _c(
@@ -39624,7 +39877,11 @@ var render = function() {
                           staticClass: "btn btn-primary",
                           attrs: { type: "submit" }
                         },
-                        [_vm._v("Create")]
+                        [
+                          _vm._v(
+                            "\n                                Create\n                            "
+                          )
+                        ]
                       )
                     ])
                   ]

@@ -9,17 +9,30 @@
                                 List of customers
                             </div>
                             <div class="col">
-                                <button class="btn btn-primary" @click="addCustomerModal()">Add Customer</button>
-                                <button class="btn btn-success" @click="reLoad()">Reload Page</button>
+                                <button
+                                    class="btn btn-primary"
+                                    @click="addCustomerModal()"
+                                >
+                                    Add Customer
+                                </button>
+                                <button
+                                    class="btn btn-success"
+                                    @click="reLoad()"
+                                >
+                                    Reload Page
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-2 offset-md-1">
-                           <label for=""> <strong class="text-center">Search By:-</strong></label>
+                            <label for="">
+                                <strong class="text-center"
+                                    >Search By:-</strong
+                                ></label
+                            >
                         </div>
                         <div class="col-md-3">
-                            
                             <select class="form-control" v-model="queryInput">
                                 <option>Select Option</option>
                                 <option value="name">Name</option>
@@ -30,7 +43,12 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <input type="text" v-model="searchKey" placeholder="Searach" class="form-control">
+                            <input
+                                type="text"
+                                v-model="searchKey"
+                                placeholder="Searach"
+                                class="form-control"
+                            />
                         </div>
                     </div>
                     <div class="card-body">
@@ -52,7 +70,7 @@
                                 <tr
                                     v-for="(customer, index) in customers.data"
                                     :key="customer.id"
-                                 >
+                                >
                                     <td>{{ index + 1 }}</td>
                                     <td>
                                         <img
@@ -80,6 +98,7 @@
                                             href="#"
                                             class="btn btn-sm btn-danger"
                                             title="Delete"
+                                            @click="deleteRecord(customer)"
                                             >Delete</a
                                         >
                                     </td>
@@ -102,60 +121,155 @@
         <vue-progress-bar></vue-progress-bar>
         <vue-snotify></vue-snotify>
 
- <!-- Button trigger modal -->
+        <!-- Button trigger modal -->
         <!-- Modal -->
-        <div class="modal fade" id="customerModal" aria-labelledby="customerModallLabel" aria-hidden="true">
+        <div
+            class="modal fade"
+            id="customerModal"
+            aria-labelledby="customerModallLabel"
+            aria-hidden="true"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="customerModallLabel" v-show="!editMode">Add New Customer</h5>
-                    <h5 class="modal-title" id="customerModallLabel" v-show="editMode">Edit Customer Info </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                   <form @submit.prevent="store()" method="post">
-                       <div class="form-group">
-                         <label for="name">Name</label>
-                         <input type="text"
-                           class="form-control" v-model="form.name" name="name" id="name" placeholder="Enter Your Name">
-                       </div>
-                       <div class="form-group">
-                         <label for="email">Email</label>
-                         <input type="text"
-                           class="form-control" v-model="form.email" name="email" id="email" placeholder="Enter Your email">
-                       </div>
-                       <div class="form-group">
-                         <label for="phone">Phone</label>
-                         <input type="number"
-                           class="form-control" v-model="form.phone" name="phone" id="phone" placeholder="Enter Your phone">
-                       </div>
-                       <div class="form-group">
-                         <label for="address">Address</label>
-                         <textarea class="form-control" v-model="form.address" name="address" id="address" rows="3"></textarea>
-                       </div>
-                       <div class="form-group">
-                         <label for="total">Total</label>
-                         <input type="number"
-                           class="form-control" v-model="form.total" name="total" id="total" placeholder="Enter Your Amount">
-                       </div>
-                       <div class="form-group">
-                         <label for="image">Image</label>
-                         <input type="file" @change="imagePreviewMethod" class="form-control-file"  name="form.image" id="image" placeholder="image">
-                         <img style="width:150px; margin-top: 8px;"  :src="imagePreview" alt="">
-                       </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                           <button v-show="editMode" type="submit" class="btn btn-success">Update</button>
-                           <button v-show="!editMode" type="submit" class="btn btn-primary">Create</button>
-                        </div>
-                   </form>
-                </div>
+                    <div class="modal-header">
+                        <h5
+                            class="modal-title"
+                            id="customerModallLabel"
+                            v-show="!editMode"
+                        >
+                            Add New Customer
+                        </h5>
+                        <h5
+                            class="modal-title"
+                            id="customerModallLabel"
+                            v-show="editMode"
+                        >
+                            Edit Customer Info
+                        </h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form
+                            @submit.prevent="store()"
+                            method="POST"
+                            enctype="multipart/form-data"
+                        >
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    v-model="form.name"
+                                    name="name"
+                                    id="name"
+                                    placeholder="Enter Your Name"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    v-model="form.email"
+                                    name="email"
+                                    id="email"
+                                    placeholder="Enter Your email"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="mobile">Mobile</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    v-model="form.mobile"
+                                    name="mobile"
+                                    id="mobile"
+                                    placeholder="Enter Your mobile"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea
+                                    class="form-control"
+                                    v-model="form.address"
+                                    name="address"
+                                    id="address"
+                                    rows="3"
+                                ></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="total">Total</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    v-model="form.total"
+                                    name="total"
+                                    id="total"
+                                    placeholder="Enter Your Amount"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select
+                                    class="form-control"
+                                    v-model="form.status"
+                                    name="status"
+                                >
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input
+                                    type="file"
+                                    @change="imagePreviewMethod"
+                                    class="form-control-file"
+                                    name="image"
+                                    id="image"
+                                    placeholder="image"
+                                />
+                                <img
+                                    style="width:150px; margin-top: 8px;"
+                                    :src="imagePreview"
+                                    alt=""
+                                />
+                            </div>
+                            <div class="modal-footer">
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-dismiss="modal"
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    v-show="editMode"
+                                    type="submit"
+                                    class="btn btn-success"
+                                >
+                                    Update
+                                </button>
+                                <button
+                                    v-show="!editMode"
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    Create
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -164,44 +278,43 @@ export default {
     data() {
         return {
             imagePreview: null,
-            customerPicture: '',
+            customerPicture: "",
             imageStyleClass: {
-                 'image-preview': true
+                "image-preview": true
             },
             editMode: false,
-            queryInput: 'name',
-            searchKey: '',
+            queryInput: "name",
+            searchKey: "",
             customers: [],
             imagePath: "",
-            errorMsgStyle:{
-                       'text-center': true,
-                       'text-danger': true,
-                       'font-weight-bolder': true,
-                  },
-           errorText: 'Sorry no data found!',
-        //    form data set
-           form: new Form({
-                    id: "",
-                    name: "",
-                    email: "",
-                    phone: "",
-                    address: "",
-                    total: "",
-                    status: "",
-                    image: "",
-                }),
+            errorMsgStyle: {
+                "text-center": true,
+                "text-danger": true,
+                "font-weight-bolder": true
+            },
+            errorText: "Sorry no data found!",
+            //    form data set
+            form: new Form({
+                id: "",
+                name: "",
+                email: "",
+                mobile: "",
+                address: "",
+                total: "",
+                status: 1,
+                image: ""
+            })
         };
     },
-    watch:{
+    watch: {
         // condition wise data rendering
-        searchKey: function(value){
-                     if(value === ''){
-                          this.getAllCustomers();
-                     }else{
-                        this.getSarchCustomers();
-                     }
+        searchKey: function(value) {
+            if (value === "") {
+                this.getAllCustomers();
+            } else {
+                this.getSarchCustomers();
+            }
         }
-         
     },
     mounted() {
         // console.log("Component mounted.");
@@ -226,9 +339,17 @@ export default {
         // get search result
         getSarchCustomers(page = 1) {
             this.$Progress.start();
-            // 
+            //
             axios
-                .get('api/search/customers' + '/' + this.queryInput + '/' + this.searchKey + '?page=' + page )
+                .get(
+                    "api/search/customers" +
+                        "/" +
+                        this.queryInput +
+                        "/" +
+                        this.searchKey +
+                        "?page=" +
+                        page
+                )
                 .then(response => {
                     this.customers = response.data;
                     //   console.log(response)
@@ -240,75 +361,146 @@ export default {
                 });
         },
         // page reload method
-        reLoad(){
-            this.$Progress.start()
-             this.getAllCustomers()
-             this.searchKey = ''
-             this.queryInput = 'name'
-             this.$snotify.success('Data reload successfully.');
+        reLoad() {
+            this.$Progress.start();
+            this.getAllCustomers();
+            this.searchKey = "";
+            this.queryInput = "name";
+            this.$snotify.success("Data reload successfully.");
         },
         // add new customer modal method
-        addCustomerModal(){
-               this.editMode = false;
-               this.imagePreview = null;
-               this.form.reset();
-              $("#customerModal").modal("show");
+        addCustomerModal() {
+            this.editMode = false;
+            this.imagePreview = null;
+            this.form.reset();
+            $("#customerModal").modal("show");
         },
 
-    // image preview script
-     imagePreviewMethod(event) {
-                this.form.image = event.target.files[0];
-                let reader  = new FileReader();
-                reader.addEventListener("load", function () {
+        // image preview script
+        imagePreviewMethod(event) {
+            this.form.image = event.target.files[0];
+            let reader = new FileReader();
+            reader.addEventListener(
+                "load",
+                function() {
                     this.imagePreview = reader.result;
-                }.bind(this), false);
-                if( this.form.image ){
-                    if ( /\.(jpe?g|png|gif)$/i.test( this.form.image.name ) ) {
-                    reader.readAsDataURL( this.form.image );
-                    }
+                }.bind(this),
+                false
+            );
+            if (this.form.image) {
+                if (/\.(jpe?g|png|gif)$/i.test(this.form.image.name)) {
+                    reader.readAsDataURL(this.form.image);
                 }
-            },
+            }
+        },
 
         // edit customer info
-                editModal(user){
-                this.editMode = true;
-                this.form.reset();
-                $('#customerModal').modal('show');
-                this.form.fill(user);
-            },
+        editModal(user) {
+            this.editMode = true;
+            this.form.reset();
+            $("#customerModal").modal("show");
+            this.form.fill(user);
+        },
 
-        // instert customer record
-        store(){
-             this.$Progress.start();
-             this.form.busy = true;
-             this.form.post('api/customers/store')
-             .then(response => {
-                  this.getAllCustomers();
-                    $('#customerModal').modal('hide');
-                   if(this.form.successfull){
-                         this.$Progress.finish()
-                         this.$snotify.success('Customer info successfully submitted.')
-                   }else{
-                         this.$Progress.fail()
-                         this.$snotify.error(
-                             'Customer info successfully submitted.',
-                             'error'
-                             )
-                   }
-                   console.log(response);
-             })
-             .catch(error => {
-              console.log(error)
-             })
+        // insert customer record
+        store() {
+            this.$Progress.start();
+            this.form.busy = true;
+            this.form
+                .post("/api/customers")
+                .then(response => {
+                    this.getAllCustomers();
+                    $("#customerModal").modal("hide");
+                    if (this.form.successful) {
+                        this.$Progress.finish();
+                        this.$snotify.success(
+                            "Customer info successfully submitted."
+                        );
+                    } else {
+                        this.$Progress.fail();
+                        this.$snotify.error(
+                            "Something went wrong, please try again.",
+                            "error"
+                        );
+                    }
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        // delete customer record
+        deleteRecord(customer) {
+             this.$snotify.clear();
+            this.$snotify.confirm("You cannot recover this data again.", "Are You Sure?", {
+                timeout: false,
+                showProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                buttons: [
+                    {
+                        text: "Yes",
+                        action: toast => {
+                            this.$snotify.remove(toast.id);
+                            this.$Progress.start();
+                            // this.form.busy = true;
+                            this.form
+                                .delete("/api/customers/" + customer.id)
+                                .then(response => {
+                                    this.getAllCustomers();
+                                    if (this.form.successful) {
+                                        this.$Progress.finish();
+                                        this.$snotify.success(
+                                            "Customer info successfully deleted."
+                                        );
+                                    }
+                                    console.log(response);
+                                })
+                                .catch(error => {
+                                    this.$Progress.fail();
+                                    this.$snotify.error(
+                                        response.error,
+                                        "error"
+                                    );
+                                });
+                        },
+                        bold: true,
+                    },
+                    { text: "No",
+                     action: toast => {
+                             this.$snotify.success(
+                                            "Safe Data."
+                                        );
+                            this.$snotify.remove(toast.id);
+                     }
+                     },
+                    {
+                        text: "Later",
+                        action: toast => {
+                            console.log("Clicked: Later");
+                            this.$snotify.remove(toast.id);
+                        }
+                    },
+                    {
+                        text: "Close",
+                        action: toast => {
+                            console.log("Clicked: No");
+                            this.$snotify.remove(toast.id);
+                        },
+                        bold: true
+                    }
+                ]
+            });
         }
     }
 };
 </script>
 <style>
-    .image-preview{
-          height: 150px;
-          width: 150px;
-          margin-top: 8px;
-          border: 1px solid #111;
-    }
+.image-preview {
+    height: 150px;
+    width: 150px;
+    margin-top: 8px;
+    border: 1px solid #111;
+}
 </style>

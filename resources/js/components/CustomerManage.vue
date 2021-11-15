@@ -157,8 +157,8 @@
                     </div>
                     <div class="modal-body">
                         <form
-                            @submit.prevent="store()"
-                            method="POST"
+                            @submit.prevent="editMode ? update() : store()"
+                     
                             enctype="multipart/form-data"
                         >
                             <div class="form-group">
@@ -238,7 +238,7 @@
                                 />
                                 <img
                                     style="width:150px; margin-top: 8px;"
-                                    :src="imagePreview"
+                                    :src="imagePreview == null ? form.image : imagePreview "
                                     alt=""
                                 />
                             </div>
@@ -395,11 +395,13 @@ export default {
         },
 
         // edit customer info
-        editModal(user) {
+        editModal(customer) {
             this.editMode = true;
             this.form.reset();
+             this.imagePreview = null;
             $("#customerModal").modal("show");
-            this.form.fill(user);
+            this.form.fill(customer);
+             this.imagePreview = this.customer.image;
         },
 
         // insert customer record
@@ -415,6 +417,33 @@ export default {
                         this.$Progress.finish();
                         this.$snotify.success(
                             "Customer info successfully submitted."
+                        );
+                    } else {
+                        this.$Progress.fail();
+                        this.$snotify.error(
+                            "Something went wrong, please try again.",
+                            "error"
+                        );
+                    }
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+        // update customer record
+        update() {
+            this.$Progress.start();
+            this.form.busy = true;
+            this.form
+                .put("/api/customers/" + this.form.id)
+                .then(response => {
+                    this.getAllCustomers();
+                    $("#customerModal").modal("hide");
+                    if (this.form.successful) {
+                        this.$Progress.finish();
+                        this.$snotify.success(
+                            "Customer info successfully updated."
                         );
                     } else {
                         this.$Progress.fail();

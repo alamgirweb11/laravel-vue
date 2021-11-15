@@ -86,7 +86,27 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+         $customer = Customer::findOrFail($id);
+
+         $input = $request->all();
+
+         if($request->hasFile('image')){
+            $image = $request->file('image');
+            $ext = $image->getClientOriginalExtension();
+            $file = time().'.'.$ext;
+            $image->move('uploads/customers', $file);
+            $input['image'] = $file;
+         }
+
+        try{
+            $customer->update($input);
+            return response()->json(
+                ['success' => 'Customer info successfully updated.', 
+                'success code' => 201,
+                'data' => $customer]);
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -99,7 +119,6 @@ class CustomerController extends Controller
     {
         $customer = Customer::findOrFail($id);
         $imagePath = 'public/uploads/customers/'.$customer->image;
-        return $customer->image;
         if(file_exists($imagePath)){
             unlink($imagePath);
         }

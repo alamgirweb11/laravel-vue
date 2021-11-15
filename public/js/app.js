@@ -2450,11 +2450,13 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     // edit customer info
-    editModal: function editModal(user) {
+    editModal: function editModal(customer) {
       this.editMode = true;
       this.form.reset();
+      this.imagePreview = null;
       $("#customerModal").modal("show");
-      this.form.fill(user);
+      this.form.fill(customer);
+      this.imagePreview = this.customer.image;
     },
     // insert customer record
     store: function store() {
@@ -2482,9 +2484,35 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
+    // update customer record
+    update: function update() {
+      var _this4 = this;
+
+      this.$Progress.start();
+      this.form.busy = true;
+      this.form.put("/api/customers/" + this.form.id).then(function (response) {
+        _this4.getAllCustomers();
+
+        $("#customerModal").modal("hide");
+
+        if (_this4.form.successful) {
+          _this4.$Progress.finish();
+
+          _this4.$snotify.success("Customer info successfully updated.");
+        } else {
+          _this4.$Progress.fail();
+
+          _this4.$snotify.error("Something went wrong, please try again.", "error");
+        }
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     // delete customer record
     deleteRecord: function deleteRecord(customer) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.$snotify.clear();
       this.$snotify.confirm("You cannot recover this data again.", "Are You Sure?", {
@@ -2495,48 +2523,48 @@ __webpack_require__.r(__webpack_exports__);
         buttons: [{
           text: "Yes",
           action: function action(toast) {
-            _this4.$snotify.remove(toast.id);
+            _this5.$snotify.remove(toast.id);
 
-            _this4.$Progress.start(); // this.form.busy = true;
+            _this5.$Progress.start(); // this.form.busy = true;
 
 
-            _this4.form["delete"]("/api/customers/" + customer.id).then(function (response) {
-              _this4.getAllCustomers();
+            _this5.form["delete"]("/api/customers/" + customer.id).then(function (response) {
+              _this5.getAllCustomers();
 
-              if (_this4.form.successful) {
-                _this4.$Progress.finish();
+              if (_this5.form.successful) {
+                _this5.$Progress.finish();
 
-                _this4.$snotify.success("Customer info successfully deleted.");
+                _this5.$snotify.success("Customer info successfully deleted.");
               }
 
               console.log(response);
             })["catch"](function (error) {
-              _this4.$Progress.fail();
+              _this5.$Progress.fail();
 
-              _this4.$snotify.error(response.error, "error");
+              _this5.$snotify.error(response.error, "error");
             });
           },
           bold: true
         }, {
           text: "No",
           action: function action(toast) {
-            _this4.$snotify.success("Safe Data.");
+            _this5.$snotify.success("Safe Data.");
 
-            _this4.$snotify.remove(toast.id);
+            _this5.$snotify.remove(toast.id);
           }
         }, {
           text: "Later",
           action: function action(toast) {
             console.log("Clicked: Later");
 
-            _this4.$snotify.remove(toast.id);
+            _this5.$snotify.remove(toast.id);
           }
         }, {
           text: "Close",
           action: function action(toast) {
             console.log("Clicked: No");
 
-            _this4.$snotify.remove(toast.id);
+            _this5.$snotify.remove(toast.id);
           },
           bold: true
         }]
@@ -39589,11 +39617,11 @@ var render = function() {
                 _c(
                   "form",
                   {
-                    attrs: { method: "POST", enctype: "multipart/form-data" },
+                    attrs: { enctype: "multipart/form-data" },
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
-                        return _vm.store()
+                        _vm.editMode ? _vm.update() : _vm.store()
                       }
                     }
                   },
@@ -39824,7 +39852,13 @@ var render = function() {
                       _vm._v(" "),
                       _c("img", {
                         staticStyle: { width: "150px", "margin-top": "8px" },
-                        attrs: { src: _vm.imagePreview, alt: "" }
+                        attrs: {
+                          src:
+                            _vm.imagePreview == null
+                              ? _vm.form.image
+                              : _vm.imagePreview,
+                          alt: ""
+                        }
                       })
                     ]),
                     _vm._v(" "),
